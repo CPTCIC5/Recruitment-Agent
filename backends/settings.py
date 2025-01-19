@@ -29,6 +29,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     "corsheaders",
+    'main',
+    'organization',
+    'users'
 ]
 
 MIDDLEWARE = [
@@ -63,7 +66,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backends.wsgi.application'
 
-
+NTERNAL_IPS = [
+    "127.0.0.1"
+]
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
