@@ -65,8 +65,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'backends.wsgi.application'
+AUTH_USER_MODEL= 'users.User'
 
-NTERNAL_IPS = [
+INTERNAL_IPS = [
     "127.0.0.1"
 ]
 # Database

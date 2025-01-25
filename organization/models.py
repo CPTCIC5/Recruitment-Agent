@@ -1,21 +1,26 @@
 from django.db import models, transaction
 from openai import OpenAI
 from dotenv import load_dotenv
-from django.contrib.auth.models import User
+from users.models import User
+from django.utils.crypto import get_random_string
+
 load_dotenv()
 client= OpenAI()
+
+
 INDUSTRIES= (
     (1, "IT SERVICES"),
     (2, "Product Based"),
     (3, "Finance"),
     (4, "Sport")
 )
+
 # Create your models here.
 class Organization(models.Model):
     root_user= models.OneToOneField(User, on_delete=models.CASCADE,related_name="organization_root_user")
     users= models.ManyToManyField(User)
     name= models.CharField(max_length=100)
-    industry= models.IntegerField(max_length=100, choices=INDUSTRIES)
+    industry= models.IntegerField(choices=INDUSTRIES)
     url= models.URLField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     knowledge= models.TextField(blank=True)
@@ -59,3 +64,17 @@ class Organization(models.Model):
 
             # https://stackoverflow.com/a/78053539/13953998
             transaction.on_commit(add_member)
+
+def create_workspace_invite():
+    return get_random_string(10)
+
+class OrganizationInvite(models.Model):
+    organization= models.ForeignKey(Organization, on_delete=models.CASCADE)
+    invite_code = models.CharField(max_length=20, default=create_workspace_invite)
+    email= models.EmailField(null=False, blank=False)
+    accepted= models.BooleanField(default=False)
+    created_at= models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self):
+        return str(self.organization)
