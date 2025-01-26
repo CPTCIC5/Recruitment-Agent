@@ -27,10 +27,10 @@ class SignupView(APIView):
         user = serializer.save()
 
         if invite_code:
-            # add the user to the workspace
+            # add the user to the organization
 
             if invite.accepted == False:
-                invite.organzation.users.add(user)
+                invite.organization.users.add(user)
                 invite.accepted=True
                 invite.save()
             else:
@@ -52,7 +52,7 @@ class SignupView(APIView):
         return response
 
 
-class LoginViewAPI(APIView):
+class LoginView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
@@ -84,7 +84,7 @@ class LoginViewAPI(APIView):
 
         return response
 
-class LogoutViewAPI(APIView):
+class LogoutView(APIView):
     permission_classes= permissions.IsAuthenticated
 
     def post(self, request):

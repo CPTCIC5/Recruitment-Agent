@@ -59,18 +59,18 @@ class Organization(models.Model):
             self.save(update_fields=['knowledge'])
 
             def add_member():
-                # Add the root_user of the workspace as a member
+                # Add the root_user of the organization as a member
                 self.users.add(self.root_user)
 
             # https://stackoverflow.com/a/78053539/13953998
             transaction.on_commit(add_member)
 
-def create_workspace_invite():
+def create_organization_invite():
     return get_random_string(10)
 
 class OrganizationInvite(models.Model):
     organization= models.ForeignKey(Organization, on_delete=models.CASCADE)
-    invite_code = models.CharField(max_length=20, default=create_workspace_invite)
+    invite_code = models.CharField(max_length=20, default=create_organization_invite)
     email= models.EmailField(null=False, blank=False)
     accepted= models.BooleanField(default=False)
     created_at= models.DateTimeField(auto_now_add=True)

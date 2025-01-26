@@ -22,7 +22,7 @@ class OrganizationInviteCreateSerializer(serializers.ModelSerializer):
 
 
 class OrganizationInviteSerializer(serializers.ModelSerializer):
-    workspace = OrganizationSerializer(read_only=True)
+    organization= OrganizationSerializer(read_only=True)
     class Meta:
         model = OrganizationInvite
         fields= ["organization","invite_code","email","accepted","created_at"]
