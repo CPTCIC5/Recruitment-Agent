@@ -2,7 +2,7 @@ from rest_framework.views import APIView,Http404
 from rest_framework import permissions,status,viewsets
 from rest_framework.response import Response
 from django.contrib.auth import logout,login,authenticate,update_session_auth_hash
-from django.contrib.auth.models import User
+from users.models import User
 from rest_framework.decorators import action
 # Create your views here.
 from . import serializers,permissions as  pp

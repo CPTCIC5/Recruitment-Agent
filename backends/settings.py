@@ -46,6 +46,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend"
+]
+
+
+CSRF_COOKIE_SECURE= False
+
 ROOT_URLCONF = 'backends.urls'
 
 TEMPLATES = [
@@ -66,6 +73,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backends.wsgi.application'
 AUTH_USER_MODEL= 'users.User'
+
+EMAIL_HOST = os.environ["EMAIL_HOST"]
+EMAIL_PORT = int(os.environ["EMAIL_PORT"])
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ["EMAIL_HOST_USER"]
+EMAIL_HOST_PASSWORD = os.environ["EMAIL_HOST_PASSWORD"]
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_DEBUG = True
+
 
 INTERNAL_IPS = [
     "127.0.0.1"
