@@ -1,7 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.validators import validate_image_file_extension
-from django_countries.fields import CountryField
 from .managers import CustomUserManager
 from django.utils import timezone
 import random 
@@ -51,9 +50,6 @@ class Profile(models.Model):
         blank=True,
         validators=[validate_image_file_extension],
     )
-    country= models.CharField(
-        choices=CountryField().choices, max_length=50, blank=True, null=True
-        )
     phone_number= models.CharField(max_length=15, blank=True, null=True, unique=True)
 
     referral_code= models.CharField(max_length=6, unique=True, default=generate_referral_code, blank=True)
