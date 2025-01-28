@@ -3,8 +3,10 @@ from openai import OpenAI
 from dotenv import load_dotenv
 from users.models import User
 from django.utils.crypto import get_random_string
+from django.core.validators import validate_image_file_extension
 
 load_dotenv()
+
 client= OpenAI()
 
 
@@ -22,7 +24,16 @@ class Organization(models.Model):
     name= models.CharField(max_length=100)
     industry= models.IntegerField(choices=INDUSTRIES)
     url= models.URLField(unique=True)
+    linkedin_url= models.URLField()
+    linkedin_company_id= models.CharField(max_length=100, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    avatar= models.ImageField(
+        upload_to='organization-avatars', 
+        default='default-org.jpeg',
+        null=True,
+        blank=True,
+        validators=[validate_image_file_extension],
+    )
     knowledge= models.TextField(blank=True)
 
     def __str__(self):
@@ -54,7 +65,7 @@ class Organization(models.Model):
 ]
 
             )
-            formated_answer= assistant.choices[0].message
+            formated_answer= assistant.choices[0].message.content
             self.knowledge= formated_answer
             self.save(update_fields=['knowledge'])
 

@@ -37,6 +37,7 @@ class JobPost(models.Model):
     job_type= models.IntegerField(choices=WORK_TYPES)
     skills= models.ManyToManyField(Skills)
 
+    portal_link= models.URLField()
 
     created_at= models.DateTimeField(auto_now_add=True)
 
@@ -44,3 +45,26 @@ class JobPost(models.Model):
     def __str__(self):
         return self.title
     
+
+STAGE= (
+    (1, "New Lead"),
+    (2, "Contacted"),
+    (3, "Responded"),
+    (4, "Applied"),
+    (5, "Recruiter screen"),
+    (6, "Second interview"),
+    (7, "Onsite"),
+    (8, "Offer")
+)
+
+class Candidate(models.Model):
+    first_name= models.CharField(max_length=100)
+    last_name= models.CharField(max_length=100)
+    email= models.EmailField(("email address"))
+    linkedin= models.URLField()
+    job= models.ForeignKey(JobPost, on_delete=models.CASCADE)
+    stage= models.IntegerField(choices= STAGE)
+
+
+    class Meta:
+        unique_together= ['email', 'linkedin', 'job']

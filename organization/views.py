@@ -8,17 +8,17 @@ from .permissions import OrganizationViewSetPermissions
 
 # from . import permissions
 from rest_framework import permissions
-from .serializers import OrganizationCreateSerializer,OrganizationInviteCreateSerializer
+from .serializers import OrganizationCreateSerializer,OrganizationInviteCreateSerializer,OrganizationSerializer
 
 
 class OrganizationsViewSet(viewsets.ModelViewSet):
     # permission_classes = (WorkSpaceViewSetPermissions,)
     permission_classes = (permissions.IsAuthenticated, )
-    serializer_class = OrganizationViewSetPermissions
+    serializer_class = OrganizationSerializer
 
     def get_queryset(self):
         # All the organizations the request user is a member of
-        return self.request.user.organization_set.first()
+        return self.request.user.organization_set.all()
     #https://xyz.com
     
     
