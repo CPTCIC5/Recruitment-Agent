@@ -34,11 +34,37 @@ class JobPost(models.Model):
     portal_link= models.URLField()
 
     created_at= models.DateTimeField(auto_now_add=True)
+    questions = models.ManyToManyField("Question", through="JobPostQuestion", related_name="jobs")
 
 
     def __str__(self):
         return self.title
-    
+
+
+class Question(models.Model):
+    QUESTION_TYPES = (
+        ("text", "Text"),
+        ("mcq", "Multiple Choice"),
+        ("file", "File Upload"),
+    )
+    text = models.TextField()
+    question_type = models.CharField(max_length=10, choices=QUESTION_TYPES, default="text")
+
+    def __str__(self):
+        return self.text
+
+
+class JobPostQuestion(models.Model):
+    job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    order = models.PositiveIntegerField(default=0)  # Ordering of questions in a job
+
+    class Meta:
+        unique_together = ("job_post", "question")
+        ordering = ["order"]  # Default ordering by sequence
+
+    def __str__(self):
+        return f"{self.job_post.title} - {self.question.text} ({self.order})"
 
 STAGE= (
     (1, "New Lead"),
@@ -63,3 +89,16 @@ class Candidate(models.Model):
 
     class Meta:
         unique_together= ['email', 'linkedin', 'job']
+
+
+class CandidateResponse(models.Model):
+    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, related_name="responses")
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    response_text = models.TextField(blank=True, null=True)  # For text responses
+    response_file = models.FileField(upload_to="Responses/", blank=True, null=True)  # For file uploads
+
+    class Meta:
+        unique_together = ("candidate", "question")
+
+    def __str__(self):
+        return f"{self.candidate.first_name} - {self.question.text}"
