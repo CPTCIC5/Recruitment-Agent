@@ -1,6 +1,7 @@
 from django.db import models
 from users.models import User
 from organization.models import Organization
+from django.core.validators import FileExtensionValidator
 
 WORKPLACE_TYPES= (
     (1, 'Hybrid'),
@@ -18,12 +19,6 @@ WORK_TYPES= (
     (7, 'Internship')
 )
 
-class Skills(models.Model):
-    name= models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
-
 
 # Create your models here.
 class JobPost(models.Model):
@@ -35,7 +30,6 @@ class JobPost(models.Model):
     workplace_type= models.IntegerField(choices=WORKPLACE_TYPES)
     location= models.CharField(max_length=100)
     job_type= models.IntegerField(choices=WORK_TYPES)
-    skills= models.ManyToManyField(Skills)
 
     portal_link= models.URLField()
 
@@ -64,6 +58,7 @@ class Candidate(models.Model):
     linkedin= models.URLField()
     job= models.ForeignKey(JobPost, on_delete=models.CASCADE)
     stage= models.IntegerField(choices= STAGE)
+    resume= models.FileField(upload_to='Candidates-Resume', validators=[FileExtensionValidator(allowed_extensions=['pdf','doc','docx'])])
 
 
     class Meta:
