@@ -34,7 +34,7 @@ class JobPost(models.Model):
     portal_link= models.URLField()
 
     created_at= models.DateTimeField(auto_now_add=True)
-    questions = models.ManyToManyField("Question", through="JobPostQuestion", related_name="jobs")
+    questions = models.ManyToManyField("Question", related_name="job_posts")
 
 
     def __str__(self):
@@ -54,18 +54,6 @@ class Question(models.Model):
         return self.text
 
 
-class JobPostQuestion(models.Model):
-    job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    order = models.PositiveIntegerField(default=0)  # Ordering of questions in a job
-
-    class Meta:
-        unique_together = ("job_post", "question")
-        ordering = ["order"]  # Default ordering by sequence
-
-    def __str__(self):
-        return f"{self.job_post.title} - {self.question.text} ({self.order})"
-
 STAGE= (
     (1, "New Lead"),
     (2, "Contacted"),
@@ -78,27 +66,11 @@ STAGE= (
 )
 
 class Candidate(models.Model):
-    first_name= models.CharField(max_length=100)
-    last_name= models.CharField(max_length=100)
-    email= models.EmailField(("email address"))
-    linkedin= models.URLField()
     job= models.ForeignKey(JobPost, on_delete=models.CASCADE)
     stage= models.IntegerField(choices= STAGE)
+    
     resume= models.FileField(upload_to='Candidates-Resume', validators=[FileExtensionValidator(allowed_extensions=['pdf','doc','docx'])])
 
 
     class Meta:
         unique_together= ['email', 'linkedin', 'job']
-
-
-class CandidateResponse(models.Model):
-    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, related_name="responses")
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    response_text = models.TextField(blank=True, null=True)  # For text responses
-    response_file = models.FileField(upload_to="Responses/", blank=True, null=True)  # For file uploads
-
-    class Meta:
-        unique_together = ("candidate", "question")
-
-    def __str__(self):
-        return f"{self.candidate.first_name} - {self.question.text}"
