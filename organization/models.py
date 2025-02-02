@@ -59,7 +59,8 @@ class Organization(models.Model):
                                 "1. Company Overview: Industry, size, work environment, and values.\n"
                                 "2. Candidate Alignment: Educational qualifications, work experience, skills, cultural fit, and performance expectations.\n"
                                 "3. Additional Metrics: Diversity, adaptability, language proficiency, portfolio relevance, salary expectations, and availability.\n\n"
-                                f"Input:\n- Name: {self.name}\n- Website: {self.url} Industry: {self.industry}"
+                                f"Input:\n- Name: {self.name}\n- Website: {self.url} Industry: {self.industry} Linkedin: {self.linkedin_url}"
+                                "Note- Consider linkedin description the most for the details."
                             )
                         }
 ]

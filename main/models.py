@@ -55,3 +55,7 @@ class Candidate(models.Model):
     job= models.ForeignKey(JobPost, on_delete=models.CASCADE)
     stage= models.IntegerField(choices= STAGE)
     resume= models.FileField(upload_to='Candidates-Resume', validators=[FileExtensionValidator(allowed_extensions=['pdf','doc','docx'])])
+
+
+    def __str__(self):
+        return str(self.job)
