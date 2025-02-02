@@ -34,24 +34,10 @@ class JobPost(models.Model):
     portal_link= models.URLField()
 
     created_at= models.DateTimeField(auto_now_add=True)
-    questions = models.ManyToManyField("Question", related_name="job_posts")
 
 
     def __str__(self):
         return self.title
-
-
-class Question(models.Model):
-    QUESTION_TYPES = (
-        ("text", "Text"),
-        ("mcq", "Multiple Choice"),
-        ("file", "File Upload"),
-    )
-    text = models.TextField()
-    question_type = models.CharField(max_length=10, choices=QUESTION_TYPES, default="text")
-
-    def __str__(self):
-        return self.text
 
 
 STAGE= (
@@ -68,9 +54,4 @@ STAGE= (
 class Candidate(models.Model):
     job= models.ForeignKey(JobPost, on_delete=models.CASCADE)
     stage= models.IntegerField(choices= STAGE)
-    
     resume= models.FileField(upload_to='Candidates-Resume', validators=[FileExtensionValidator(allowed_extensions=['pdf','doc','docx'])])
-
-
-    class Meta:
-        unique_together= ['email', 'linkedin', 'job']
