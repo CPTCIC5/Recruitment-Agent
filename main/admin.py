@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import JobPost, Candidate
+from .models import JobPost, Applicant
 
 
-admin.site.register(Candidate)
+admin.site.register(Applicant)
 admin.site.register(JobPost)
 
 #admin.site.register()

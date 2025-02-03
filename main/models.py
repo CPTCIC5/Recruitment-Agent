@@ -39,21 +39,9 @@ class JobPost(models.Model):
     def __str__(self):
         return self.title
 
-
-STAGE= (
-    (1, "New Lead"),
-    (2, "Contacted"),
-    (3, "Responded"),
-    (4, "Applied"),
-    (5, "Recruiter screen"),
-    (6, "Second interview"),
-    (7, "Onsite"),
-    (8, "Offer")
-)
-
-class Candidate(models.Model):
+class Applicant(models.Model):
     job= models.ForeignKey(JobPost, on_delete=models.CASCADE)
-    stage= models.IntegerField(choices= STAGE)
+    #stage= models.IntegerField(choices= STAGE)
     resume= models.FileField(upload_to='Candidates-Resume', validators=[FileExtensionValidator(allowed_extensions=['pdf','doc','docx'])])
 
 
