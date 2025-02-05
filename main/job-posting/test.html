@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test</title>
+    <style>
+        body { background-color: #121212; color: white; font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+        button { padding: 10px 20px; font-size: 16px; background: #1e90ff; color: white; border: none; cursor: pointer; border-radius: 5px; }
+        button:disabled { background: gray; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+    <h2>Quick API Test</h2>
+    <button id="testButton">Test Google Adwords API</button>
+    <p id="response"></p>
+
+    <script>
+        document.getElementById("testButton").addEventListener("click", function() {
+            window.location.href = "http://127.0.0.1:8000/";
+        });
+    </script>
+
+</body>
+</html>

@@ -7,8 +7,20 @@ from urllib.parse import urlencode
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.conf import settings
-from users.models import User
+# from users.models import User
 from django.contrib.auth.decorators import login_required
+from dotenv import load_dotenv
+load_dotenv()
+
+####################### REMOVE AFTER TESTING ###############################
+from django.core.management import execute_from_command_line
+from django.urls import path
+from django.apps import AppConfig
+from django.core.wsgi import get_wsgi_application
+# from django.conf.urls import url
+from django.http import HttpResponse
+from django.shortcuts import render
+######################## REMOVE AFTER TESTING ############################
 
 # Load environment variables
 client_id = os.getenv("CLIENT_ID")
@@ -29,11 +41,13 @@ def index(request):
     error = request.GET.get('error')
 
     if error:
-        return HttpResponseRedirect('/login')
+        # return HttpResponseRedirect('/test') ################# CHANGE THIS TO ERROR PAGE URL #################
+        return JsonResponse({'error': error}) # FOR TESTING PURPOSE
 
     if code:
         token_response = exchange_code_for_token(code)
-        return HttpResponseRedirect('/todos')
+        # return HttpResponseRedirect('/test') ################# CHANGE THIS TO SUCCESS PAGE URL #################
+        return JsonResponse(token_response) # FOR TESTING PURPOSE
 
     return redirect_to_twitter_auth()
 
@@ -51,8 +65,8 @@ def redirect_to_twitter_auth():
     return HttpResponseRedirect(authorization_url)
 
 
-@login_required
-def exchange_code_for_token(code, request):
+# @login_required  ############## UNCOMMENT THIS LINE AFTER TESTING ################
+def exchange_code_for_token(code: str, request):
     token_data = {
         'client_id': client_id,
         'client_secret': client_secret,
@@ -76,15 +90,33 @@ def exchange_code_for_token(code, request):
         token_info= response.json()
         access_token= token_info.get("access_token")
         refresh_token= token_info.get("refresh_token")
-        
-        user = User.objects.get(id=request.user.id)
-        organization = user.organization_set.first()
-        if organization:
-            organization.twitter_access_token = access_token
-            organization.twitter_refresh_token = refresh_token
-            organization.save()
+        print(token_info)
+        ############################ NEED TO UNCOMMENT THIS AFTER TESTING ############################
+        # user = User.objects.get(id=request.user.id)
+        # organization = user.organization_set.first()
+        # if organization:
+        #     organization.twitter_access_token = access_token
+        #     organization.twitter_refresh_token = refresh_token
+        #     organization.save()
         
         return JsonResponse(token_info)
     
     else:
         return JsonResponse({'error': 'Failed to exchange code for token'}, status=response.status_code)
+
+################################# FOR TESTING PURPOSE ################################
+urlpatterns = [
+    path('', index),
+    path('auth/', index),
+]
+
+settings.configure(
+    DEBUG=True,
+    ROOT_URLCONF=__name__,
+    ALLOWED_HOSTS=['*'],
+)
+
+application = get_wsgi_application()
+
+if __name__ == "__main__":
+    execute_from_command_line(["manage.py", "runserver", "127.0.0.1:8000"])
