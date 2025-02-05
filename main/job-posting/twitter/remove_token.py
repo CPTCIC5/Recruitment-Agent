@@ -8,7 +8,7 @@ import os
 
 client_id = os.getenv("CLIENT_ID")
 client_secret = os.getenv("CLIENT_SECRET")
-revoke_url = "your_revoke_url"
+revoke_url = "https://api.x.com/2/oauth2/revoke"
 
 
 
