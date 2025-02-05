@@ -8,6 +8,7 @@ from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.conf import settings
 from users.models import User
+from django.contrib.auth.decorators import login_required
 
 # Load environment variables
 client_id = os.getenv("CLIENT_ID")
@@ -49,7 +50,9 @@ def redirect_to_twitter_auth():
     
     return HttpResponseRedirect(authorization_url)
 
-def exchange_code_for_token(code):
+
+@login_required
+def exchange_code_for_token(code, request):
     token_data = {
         'client_id': client_id,
         'client_secret': client_secret,
@@ -70,11 +73,11 @@ def exchange_code_for_token(code):
     response = requests.post(token_url, data=token_data, headers=headers)
     
     if response.status_code == 200:
-        token_info = response.json()
-        access_token = token_info.get("access_token")
-        refresh_token = token_info.get("refresh_token")
+        token_info= response.json()
+        access_token= token_info.get("access_token")
+        refresh_token= token_info.get("refresh_token")
         
-        user = User.objects.get(id=1) # Replace with actual user identification
+        user = User.objects.get(id=request.user.id)
         organization = user.organization_set.first()
         if organization:
             organization.twitter_access_token = access_token
