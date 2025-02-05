@@ -36,6 +36,9 @@ class Organization(models.Model):
     )
     knowledge= models.TextField(blank=True)
 
+    twitter_access_token= models.CharField(max_length=100, null=True)
+    twitter_refresh_token= models.CharField(max_length=100, null=True)
+
     def __str__(self):
         return self.name
 
