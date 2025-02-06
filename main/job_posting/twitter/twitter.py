@@ -12,15 +12,7 @@ from django.contrib.auth.decorators import login_required
 from dotenv import load_dotenv
 load_dotenv()
 
-####################### REMOVE AFTER TESTING ###############################
-from django.core.management import execute_from_command_line
-from django.urls import path
-from django.apps import AppConfig
-from django.core.wsgi import get_wsgi_application
-# from django.conf.urls import url
-from django.http import HttpResponse
-from django.shortcuts import render
-######################## REMOVE AFTER TESTING ############################
+
 
 # Load environment variables
 client_id = os.getenv("CLIENT_ID")
@@ -37,6 +29,7 @@ code_challenge = base64.urlsafe_b64encode(
 ).decode().rstrip("=")
 
 def index(request):
+    print('ran')
     code = request.GET.get('code')
     error = request.GET.get('error')
 
@@ -103,20 +96,3 @@ def exchange_code_for_token(code: str, request):
     
     else:
         return JsonResponse({'error': 'Failed to exchange code for token'}, status=response.status_code)
-
-################################# FOR TESTING PURPOSE ################################
-urlpatterns = [
-    path('', index),
-    path('auth/', index),
-]
-
-settings.configure(
-    DEBUG=True,
-    ROOT_URLCONF=__name__,
-    ALLOWED_HOSTS=['*'],
-)
-
-application = get_wsgi_application()
-
-if __name__ == "__main__":
-    execute_from_command_line(["manage.py", "runserver", "127.0.0.1:8000"])
