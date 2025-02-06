@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import JobPost
+from .models import JobPost,Applicant
 
 from organization.serializers import  OrganizationSerializer
 from users.serializers import UserSerializer
@@ -17,3 +17,15 @@ class JobPostSerializer(serializers.ModelSerializer):
         model= JobPost
         fields= ['user','organization', 'title', 'job_desc', 'workplace_type',
                  'location', 'job_type']
+
+
+class ApplicantCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= Applicant
+        fields= ['resume']
+
+class ApplicantSerializer(serializers.ModelSerializer):
+    job= JobPostSerializer()
+    class Meta:
+        model= Applicant
+        fields= ['job', 'resume']
