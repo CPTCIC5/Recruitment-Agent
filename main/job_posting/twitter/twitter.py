@@ -7,7 +7,7 @@ from urllib.parse import urlencode
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.conf import settings
-# from users.models import User
+from users.models import User
 from django.contrib.auth.decorators import login_required
 from dotenv import load_dotenv
 load_dotenv()
@@ -89,6 +89,10 @@ def exchange_code_for_token(request, code: str):
         ################################### SAVE THE TOKEN IN THE DATABASE ###################################
         access_token = token_info.get('access_token')
         refresh_token = token_info.get('refresh_token')
+        organization= User.objects.get(id=request.user.id).organization_set.first()
+        organization.access_token= access_token
+        organization.refresh_token= refresh_token
+        organization.save()
         #############################   Save the token in the database   #############################
         return JsonResponse(token_info)
     elif response.status_code == 302:

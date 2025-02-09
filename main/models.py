@@ -6,8 +6,10 @@ from openai import OpenAI
 from django.core.validators import FileExtensionValidator
 from django.core.exceptions import ValidationError
 from dotenv import load_dotenv
+from pinecone import Pinecone
 
 load_dotenv()
+pinecone= Pinecone()
 client= OpenAI()
 
 WORKPLACE_TYPES= (
@@ -49,6 +51,7 @@ class JobPost(models.Model):
 class Applicant(models.Model):
     job= models.ForeignKey(JobPost, on_delete=models.CASCADE)
     resume= models.FileField(upload_to='Candidates-Resume', validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
+    namespace= models.CharField(max_length=12, unique=True, blank=True, null=True)
 
 
     def __str__(self):
@@ -77,6 +80,7 @@ class Applicant(models.Model):
             model="text-embedding-ada-002"
         )
         embeddings = response.data[0].embedding
+        pinecone.create
         return embeddings
     
     def save(self, *args, **kwargs):
