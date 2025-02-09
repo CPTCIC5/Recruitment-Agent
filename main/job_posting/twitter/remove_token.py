@@ -13,7 +13,6 @@ revoke_url = "https://api.x.com/2/oauth2/revoke"
 
 
 
-@login_required
 def revoke_token(request):
     user= get_object_or_404(User, id=request.user.id)  # Change logic to dynamically fetch user if needed
     organization= user.organization_set.first()

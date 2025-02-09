@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 from pinecone import Pinecone
 
 load_dotenv()
-pinecone= Pinecone()
+
 client= OpenAI()
 
 WORKPLACE_TYPES= (
@@ -80,7 +80,7 @@ class Applicant(models.Model):
             model="text-embedding-ada-002"
         )
         embeddings = response.data[0].embedding
-        pinecone.create
+      
         return embeddings
     
     def save(self, *args, **kwargs):
