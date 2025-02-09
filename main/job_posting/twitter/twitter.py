@@ -86,7 +86,10 @@ def exchange_code_for_token(request, code: str):
 
     if response.status_code == 200:
         token_info = response.json()
-        # Now we have access token info, which we can use for further requests
+        ################################### SAVE THE TOKEN IN THE DATABASE ###################################
+        access_token = token_info.get('access_token')
+        refresh_token = token_info.get('refresh_token')
+        #############################   Save the token in the database   #############################
         return JsonResponse(token_info)
     elif response.status_code == 302:
         # If the response is a redirect, it means the authorization code has expired

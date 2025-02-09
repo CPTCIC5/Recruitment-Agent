@@ -4,7 +4,8 @@ from django.http import JsonResponse
 from users.models import User
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
-import os
+
+from twitter import *
 
 client_id = os.getenv("CLIENT_ID")
 client_secret = os.getenv("CLIENT_SECRET")
