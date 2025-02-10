@@ -47,8 +47,8 @@ def index(request):
 
 def redirect_to_twitter_auth(request):
     print("redirect_to_twitter_auth running")
-    # Generate the URL to redirect the user to for Twitter OAuth2 authorization
-    authorization_url = f"{auth_url}?{urlencode({
+    
+    params = {
         'response_type': 'code',
         'client_id': client_id,
         'redirect_uri': redirect_uri,
@@ -56,8 +56,9 @@ def redirect_to_twitter_auth(request):
         'state': 'state',
         'code_challenge': code_challenge,
         'code_challenge_method': 'S256'  # for method sha256
-    })}"
-
+    }
+    
+    authorization_url = f"{auth_url}?{urlencode(params)}"
     return HttpResponseRedirect(authorization_url)
 
 
@@ -90,8 +91,9 @@ def exchange_code_for_token(request, code: str):
         access_token = token_info.get('access_token')
         refresh_token = token_info.get('refresh_token')
         organization= User.objects.get(id=request.user.id).organization_set.first()
-        organization.access_token= access_token
-        organization.refresh_token= refresh_token
+        print(organization)
+        organization.twitter_access_token= access_token
+        organization.twitter_refresh_token= refresh_token
         organization.save()
         #############################   Save the token in the database   #############################
         return JsonResponse(token_info)
